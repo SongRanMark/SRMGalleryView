@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "SRMGalleryView.h"
+#import "UIView+Frame.h"
 
 @interface ViewController ()
 
@@ -25,8 +26,7 @@
     centerView.backgroundColor = [UIColor magentaColor];
     UIView *rightView = [[UIView alloc] initWithFrame:CGRectZero];
     rightView.backgroundColor = [UIColor cyanColor];
-//    NSArray *resources = @[leftView, centerView, rightView];
-    NSArray *resources = @[leftView];
+    NSArray *resources = @[leftView, centerView, rightView];
     [self.galleryView loadResources:resources];
 }
 

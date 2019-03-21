@@ -23,6 +23,8 @@
 
 @implementation SRMGalleryView
 
+#pragma mark - Override
+
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self initializeScrollView];
@@ -37,6 +39,12 @@
     }
     
     return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    // 此时 view 本身的 size 才依据约束设为正确值，之后就可利用其宽度设置 contentOffset，contentSize 本身可通过约束自动计算出正确值。
+    [self setContentOffsetWithResourcesCount:self.resourceArray.count];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame resources:(NSArray *)resources {
@@ -124,9 +132,6 @@
         self.scrollView.contentOffset = CGPointZero;
     } else if (count >= 2) {
         self.scrollView.contentOffset = CGPointMake([self width], 0);
-        // contentSize 本身可通过约束自动计算出正确值，但晚于 contentOffset 的渲染，而这会影响
-        // contentOffset 的正确显示，所以还是要预先设置 contentSize 的值。
-        self.scrollView.contentSize = CGSizeMake([self width] * 3, 0);
     }
 }
 
@@ -147,6 +152,13 @@
     NSData * viewData = [NSKeyedArchiver archivedDataWithRootObject:view];
     
     return [NSKeyedUnarchiver unarchiveObjectWithData:viewData];
+}
+
+- (UIView *)newContainerView {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectZero];
+    containerView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    return containerView;
 }
 
 #pragma mark - Setter
@@ -193,13 +205,6 @@
     }
     
     return _rightContainerView;
-}
-
-- (UIView *)newContainerView {
-    UIView *containerView = [[UIView alloc] initWithFrame:CGRectZero];
-    containerView.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    return containerView;
 }
 
 @end
